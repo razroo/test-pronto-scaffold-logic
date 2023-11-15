@@ -1,0 +1,140 @@
+# Razroo FrontEnd Stack
+
+AWSTemplateFormatVersion: '2010-09-09'
+
+Transform: AWS::Serverless-2016-10-31
+
+###############################################################################
+Parameters:
+###############################################################################
+
+Parameters:
+  Environment:
+    Type: String
+    Default: dev
+  DomainName:
+    Type: String
+    Description: The domain name.
+    Default: razroo.com
+  AcmCertificateArn:
+    Type: String
+    Default: arn:aws:acm:us-east-1:certificateName
+
+###############################################################################
+Resources:
+###############################################################################
+
+Resources:
+  WebsiteS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: Private
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        IgnorePublicAcls: true
+        BlockPublicPolicy: true
+        RestrictPublicBuckets: true
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: index.html
+    DeletionPolicy: Retain
+
+  WebsiteBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              CanonicalUser: !GetAtt CloudFrontIdentity.S3CanonicalUserId
+            Action: 's3:GetObject'
+            Resource: !Sub 'arn:aws:s3:::${WebsiteS3Bucket}/*'
+          - Effect: Allow
+            Principal:
+              CanonicalUser: !GetAtt CloudFrontIdentity.S3CanonicalUserId
+            Action: 's3:ListBucket'
+            Resource: !Sub 'arn:aws:s3:::${WebsiteS3Bucket}'
+      Bucket: !Ref WebsiteS3Bucket
+    DependsOn:
+      - CloudFrontIdentity
+      - WebsiteS3Bucket
+
+  CloudFrontIdentity:
+    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: !Sub ${AWS::StackName}-oai
+
+  CloudFrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Aliases:
+          - !Ref DomainName
+        CustomErrorResponses:
+          - ErrorCachingMinTTL: 300
+            ErrorCode: 403
+            ResponseCode: 200
+            ResponsePagePath: /index.html
+          - ErrorCachingMinTTL: 300
+            ErrorCode: 404
+            ResponseCode: 200
+            ResponsePagePath: /index.html
+        DefaultCacheBehavior:
+          # Disclaimer: probably, there's better ways to configure cloudformation
+          # But I'm not cloudformtion expert. If you have any recommendations,
+          # please leave them in the comments!
+          Compress: true
+          AllowedMethods:
+              - GET
+              - HEAD
+          ForwardedValues:
+            Cookies:
+              Forward: none
+            Headers:
+              - Origin
+              - Access-Control-Request-Method
+              - Access-Control-Request-Headers
+            QueryString: false
+          TargetOriginId: s3_origin
+          ViewerProtocolPolicy: redirect-to-https
+        DefaultRootObject: index.html
+        Enabled: true
+        HttpVersion: http2
+        Origins:
+          - DomainName: !GetAtt WebsiteS3Bucket.DomainName
+            Id: s3_origin
+            S3OriginConfig:
+              OriginAccessIdentity: !Sub 'origin-access-identity/cloudfront/${CloudFrontIdentity}'
+        PriceClass: PriceClass_All
+        ViewerCertificate:
+          AcmCertificateArn: !Ref AcmCertificateArn
+          SslSupportMethod: sni-only
+          MinimumProtocolVersion: TLSv1.2_2019
+    DependsOn:
+      - WebsiteS3Bucket
+      - WebsiteBucketPolicy
+
+Outputs:
+  CloudFrontDistributionId:
+    Value: !Ref CloudFrontDistribution
+    Description: CloudFront Distribution ID
+  WebsiteUrl:
+    Value: !Sub 'https://${CloudFrontDistribution.DomainName}'
+    Description: URL for website hosted on S3/CloudFront
+  WebsiteS3Bucket:
+    Value: !Ref WebsiteS3Bucket
+    Description: Bucket for website hosted on S3
+  S3BucketSecureUrl:
+    Value: !Join
+      - ''
+      - - 'https://'
+        - !GetAtt
+          - WebsiteS3Bucket
+          - DomainName
+    Description: Name of S3 bucket to hold website content
