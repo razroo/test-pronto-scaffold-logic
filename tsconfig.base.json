@@ -26,6 +26,27 @@
       ],
       "@test-pronto-scaffold-logic/home": [
         "libs/home/src/index.ts"
+      ],
+      "@test-pronto-scaffold-logic/common/common-services": [
+        "libs/common/common-services/src/index.ts"
+      ],
+      "@test-pronto-scaffold-logic/common/common-guards": [
+        "libs/common/common-guards/src/index.ts"
+      ],
+      "@test-pronto-scaffold-logic/data-access": [
+        "libs/data-access/src/index.ts"
+      ],
+      "@test-pronto-scaffold-logic/data-services": [
+        "libs/data-services/src/index.ts"
+      ],
+      "@test-pronto-scaffold-logic/data-graphql": [
+        "libs/data-graphql/src/index.ts"
+      ],
+      "@test-pronto-scaffold-logic/data-models": [
+        "libs/data-models/src/index.ts"
+      ],
+      "@test-pronto-scaffold-logic/common/common-environment": [
+        "libs/common/common-environment/src/index.ts"
       ]
     }
   },
