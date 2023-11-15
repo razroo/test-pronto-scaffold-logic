@@ -9,7 +9,12 @@
     "build": "nx build",
     "test": "node 'node_modules/.bin/jest'",
     "jest": "npm run jest",
-    "e2e": "nx e2e test-pronto-scaffold-logic-e2e"
+    "e2e": "nx e2e test-pronto-scaffold-logic-e2e",
+    "deploy": "npm run deploy:dev",
+    "deploy:env": ". ./deploy.sh",
+    "deploy:dev": "Environment=dev npm run deploy:env",
+    "deploy:test": "Environment=test npm run deploy:env",
+    "deploy:prod": "Environment=prod npm run deploy:env"
   },
   "private": true,
   "dependencies": {
