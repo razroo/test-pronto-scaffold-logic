@@ -29,6 +29,9 @@
       ],
       "@test-pronto-scaffold-logic/common/common-services": [
         "libs/common/common-services/src/index.ts"
+      ],
+      "@test-pronto-scaffold-logic/common/common-guards": [
+        "libs/common/common-guards/src/index.ts"
       ]
     }
   },
