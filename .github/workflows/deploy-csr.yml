@@ -1,0 +1,42 @@
+name: Deploy test-pronto-scaffold-logic
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Dependencies
+        run: |
+          export NODE_OPTIONS="--max_old_space_size=4096"
+          node -v
+          npm -v
+          npm install
+      - name: Build & Deploy
+        env:
+          NODE_OPTIONS: "--max_old_space_size=4096"
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-east-1
+        run: |
+          BRANCH=`echo ${GITHUB_REF/refs\/heads\//}`
+          Environment="${BRANCH}"
+          if [ "${BRANCH}" == "develop" ]; then Environment="dev"; fi
+          if [ "${BRANCH}" == "main" ]; then Environment="prod"; fi
+
+          echo "GITHUB_ACTION: ${GITHUB_ACTION}"
+          echo "GITHUB_EVENT_NAME: ${GITHUB_EVENT_NAME}"
+          echo "GITHUB_REF: ${GITHUB_REF}"
+          echo "BRANCH: ${BRANCH}"
+          echo "Environment: ${Environment}"
+
+          npm run deploy:${Environment}
