@@ -2,7 +2,21 @@
   (sideNavToggle)="sideNavToggle()"
 ></test-pronto-scaffold-logic-global-header>
 <div class="wrapper">
-  <div class="container"></div>
+  <div class="container">
+    <test-pronto-scaffold-logic-global-sidenav [opened]="sideNavOpen">
+      <mat-nav-list sidenav>
+        <a
+          mat-list-item
+          routerLinkActive="active-link"
+          routerLink="/"
+          (click)="sideNavToggle()"
+        >
+          <span class="App__sidenav-text">Home</span>
+        </a>
+      </mat-nav-list>
+      <router-outlet></router-outlet>
+    </test-pronto-scaffold-logic-global-sidenav>
+  </div>
 </div>
 <test-pronto-scaffold-logic-global-footer>
 </test-pronto-scaffold-logic-global-footer>
