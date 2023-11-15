@@ -20,6 +20,9 @@
     "paths": {
       "@test-pronto-scaffold-logic/common/styles": [
         "libs/common/styles/src/index.ts"
+      ],
+      "@test-pronto-scaffold-logic/common/ui": [
+        "libs/common/ui/src/index.ts"
       ]
     }
   },
