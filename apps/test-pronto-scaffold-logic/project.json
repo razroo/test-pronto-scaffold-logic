@@ -7,7 +7,9 @@
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/apps/test-pronto-scaffold-logic",
         "index": "apps/test-pronto-scaffold-logic/src/index.html",
@@ -19,7 +21,9 @@
           "apps/test-pronto-scaffold-logic/src/favicon.ico",
           "apps/test-pronto-scaffold-logic/src/assets"
         ],
-        "styles": ["apps/test-pronto-scaffold-logic/src/styles.scss"],
+        "styles": [
+          "apps/test-pronto-scaffold-logic/src/styles.scss"
+        ],
         "scripts": []
       },
       "configurations": {
@@ -38,8 +42,8 @@
           ],
           "fileReplacements": [
             {
-              "replace": "apps/test-pronto-scaffold-logic/src/environments/environment.ts",
-              "with": "apps/test-pronto-scaffold-logic/src/environments/environment.prod.ts"
+              "replace": "libs/common/common-environment/src/lib/environments/environment.ts",
+              "with": "libs/common/common-environment/src/lib/environments/environment.prod.ts"
             }
           ],
           "outputHashing": "all"
@@ -84,7 +88,9 @@
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/apps/test-pronto-scaffold-logic"],
+      "outputs": [
+        "{workspaceRoot}/coverage/apps/test-pronto-scaffold-logic"
+      ],
       "options": {
         "jestConfig": "apps/test-pronto-scaffold-logic/jest.config.ts",
         "passWithNoTests": true
