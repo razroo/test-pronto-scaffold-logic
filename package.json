@@ -14,7 +14,9 @@
     "deploy:env": ". ./deploy.sh",
     "deploy:dev": "Environment=dev npm run deploy:env",
     "deploy:test": "Environment=test npm run deploy:env",
-    "deploy:prod": "Environment=prod npm run deploy:env"
+    "deploy:prod": "Environment=prod npm run deploy:env",
+    "build:dev": "nx build --configuration=development",
+    "build:prod": "nx build --prod && gzipper compress ./dist"
   },
   "private": true,
   "dependencies": {
