@@ -38,6 +38,9 @@
       ],
       "@test-pronto-scaffold-logic/data-services": [
         "libs/data-services/src/index.ts"
+      ],
+      "@test-pronto-scaffold-logic/data-graphql": [
+        "libs/data-graphql/src/index.ts"
       ]
     }
   },
