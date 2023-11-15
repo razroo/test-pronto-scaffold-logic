@@ -35,6 +35,9 @@
       ],
       "@test-pronto-scaffold-logic/data-access": [
         "libs/data-access/src/index.ts"
+      ],
+      "@test-pronto-scaffold-logic/data-services": [
+        "libs/data-services/src/index.ts"
       ]
     }
   },
